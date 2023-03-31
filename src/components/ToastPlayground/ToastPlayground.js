@@ -7,12 +7,26 @@ import styles from './ToastPlayground.module.css';
 const VARIANT_OPTIONS = ['notice', 'warning', 'success', 'error'];
 
 function ToastPlayground() {
-	const { toasts, setToasts } = React.useContext(ToastContext);
+	const { toasts, setToasts, clearAllToasts } = React.useContext(ToastContext);
 	const [message, setMessage] = React.useState('');
 	const [selectedVariant, setSelectedVariant] = React.useState(
 		VARIANT_OPTIONS[0]
 	);
-	
+
+	React.useEffect(() => {
+		function handleKeyDown(ev) {
+			if (ev.key === 'Escape') {
+				clearAllToasts();
+			}
+		}
+
+		window.addEventListener('keydown', handleKeyDown);
+
+		return () => {
+			window.removeEventListener('keydown', handleKeyDown);
+		};
+	}, []);
+
 	function addNewToast(ev) {
 		ev.preventDefault();
 		const newToasts = [
